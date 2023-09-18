@@ -1,0 +1,439 @@
+<html>
+
+<head>
+  <title>List Chat User DiagnoAkses</title>
+  <link rel="icon" type="image/x-icon"
+    href="https://raw.githubusercontent.com/SimpliLife/asset/main/logo/diagnoakses.ico">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"
+    integrity="sha512-93wYgwrIFL+b+P3RvYxi/WUFRXXUDSLCT2JQk9zhVGXuS2mHl2axj6d+R6pP+gcU5isMHRj1u0oYE/mWyt/RjA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"
+    integrity="sha512-E1dSFxg+wsfJ4HKjutk/WaCzK7S2wv1POn1RRPGh8ZK+ag9l244Vqxji3r6wgz9YBf6+vhQEYJZpSjqWFPg9gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+
+    ul {
+      text-decoration: none;
+    }
+
+    li {
+      text-decoration: none;
+      list-style: none;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-image: url('./background.png');
+      font: 14px/20px "Lato", Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .container {
+      margin: 0 auto;
+      width: 80vw;
+      background: #444753;
+      border-radius: 5px;
+    }
+
+    .people-list {
+      width: 30%;
+      float: left;
+    }
+
+    .people-list .search {
+      padding: 20px;
+    }
+
+    .people-list input {
+      border-radius: 3px;
+      border: none;
+      padding: 14px;
+      color: white;
+      background: #6a6c75;
+      width: 90%;
+      font-size: 14px;
+    }
+
+    .people-list .fa-search {
+      position: relative;
+      left: -25px;
+    }
+
+    .people-list ul {
+      height: 600px;
+      overflow: hidden;
+      overflow-y: scroll;
+    }
+
+    .people-list ul li {
+      margin-bottom: 20px;
+    }
+
+    .people-list img {
+      float: left;
+    }
+
+    .people-list .about {
+      float: left;
+      margin-top: 8px;
+    }
+
+    .people-list .about {
+      padding-left: 8px;
+    }
+
+    .people-list .status {
+      color: #92959e;
+    }
+
+    .chat {
+      width: 70%;
+      float: left;
+      background: #f2f5f8;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      color: #434651;
+    }
+
+    .chat .chat-header {
+      padding: 20px;
+      border-bottom: 2px solid white;
+    }
+
+    .chat .chat-header img {
+      float: left;
+    }
+
+    .chat .chat-header .chat-about {
+      float: left;
+      padding-left: 10px;
+      margin-top: 6px;
+    }
+
+    .chat .chat-header .chat-with {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .chat .chat-header .chat-num-messages {
+      color: #92959e;
+    }
+
+    .chat .chat-header .fa-star {
+      float: right;
+      color: #d8dadf;
+      font-size: 20px;
+      margin-top: 12px;
+    }
+
+    .chat .chat-history {
+      padding: 30px 30px 20px;
+      border-bottom: 2px solid white;
+      overflow-y: scroll;
+      height: 500px;
+    }
+
+    .chat .chat-history .message-data {
+      margin-bottom: 15px;
+    }
+
+    .chat .chat-history .message-data-time {
+      color: #a8aab1;
+      padding-left: 6px;
+    }
+
+    .chat .chat-history .message {
+      color: white;
+      padding: 18px 20px;
+      line-height: 26px;
+      font-size: 16px;
+      border-radius: 7px;
+      margin-bottom: 30px;
+      width: 90%;
+      position: relative;
+    }
+
+    .chat .chat-history .message:after {
+      bottom: 100%;
+      left: 7%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: #86bb71;
+      border-width: 10px;
+      margin-left: -10px;
+    }
+
+    .chat .chat-history .my-message {
+      background: #86bb71;
+    }
+
+    .chat .chat-history .other-message {
+      background: #94c2ed;
+    }
+
+    .chat .chat-history .other-message:after {
+      border-bottom-color: #94c2ed;
+      left: 93%;
+    }
+
+    .chat .chat-message {
+      padding: 30px;
+    }
+
+    .chat .chat-message textarea {
+      width: 100%;
+      border: none;
+      padding: 10px 20px;
+      font: 14px/22px "Lato", Arial, sans-serif;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      resize: none;
+    }
+
+    .chat .chat-message .fa-file-o,
+    .chat .chat-message .fa-file-image-o {
+      font-size: 16px;
+      color: gray;
+      cursor: pointer;
+    }
+
+    .chat .chat-message button {
+      float: right;
+      color: #94c2ed;
+      font-size: 16px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: #f2f5f8;
+    }
+
+    .chat .chat-message button:hover {
+      color: #75b1e8;
+    }
+
+    .online,
+    .offline,
+    .me {
+      margin-right: 3px;
+      font-size: 10px;
+    }
+
+    .online {
+      color: #86bb71;
+    }
+
+    .offline {
+      color: #e38968;
+    }
+
+    .me {
+      color: #94c2ed;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+
+    .align-right {
+      text-align: right;
+    }
+
+    .float-right {
+      float: right;
+    }
+
+    .clearfix:after {
+      visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container clearfix">
+    <div class="people-list" id="people-list">
+      <div style="height: 92px; display: flex; align-items: center; border-bottom: 1px solid rgb(160, 160, 160);">
+        <h2 style="color: whitesmoke; padding-left:25px;">List Chat User DiagnoAkses</h2>
+      </div>
+      <ul class="list">
+      </ul>
+    </div>
+    <div class="chat">
+      <div class="chat-header clearfix">
+        <img width="50" height="50" src="https://github.com/SimpliLife/asset/blob/main/logo/diagnoakses.png?raw=true"
+          alt="avatar" />
+        <div class="chat-about">
+          <div class="chat-with"></div>
+          <div class="chat-num-messages"></div>
+        </div>
+        <i class="fa fa-star"></i>
+      </div>
+      <div class="chat-history">
+        <ul>
+        </ul>
+      </div>
+      <div class="chat-message clearfix">
+        <textarea name="message-to-send" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
+        <i class="fa fa-file-o"></i> &nbsp;&nbsp;&nbsp;
+        <i class="fa fa-file-image-o"></i>
+        <button>Send</button>
+      </div>
+    </div>
+  </div>
+</body>
+</head>
+
+<body>
+  <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
+  <script type="module">
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const firebaseConfig = {
+      apiKey: "",
+      databaseURL: "",
+      projectId: "developer-ayusudi",
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const firestore = firebase.firestore(app);
+    const chatsCollection = firestore.collection("chats");
+    (function () {
+      const showListMessage = (id) => {
+        var specificDocumentRef = chatsCollection.doc(id);
+        let obj = {}
+        specificDocumentRef.onSnapshot(function (doc) {
+          if (doc.exists) {
+            var chatData = doc.data();
+            obj = { ...chatData }
+            $(".chat-with").empty()
+            $(".chat-num-messages").empty()
+            $(".chat-with").append('Patient ' + obj.patient)
+            $(".chat-num-messages").append(new Date(obj.created.seconds * 1000).toLocaleDateString('id-ID', options))
+            $(".chat-history ul").empty()
+            chatData.messages.forEach(el => {
+              let text = ''
+              if (el.from === 'doctor') {
+                text = `<li class="clearfix"> <div class="message-data align-right"><span class="message-data-time">${new Date(el.date.seconds * 1000).toLocaleDateString('id-ID', options)}</span> &nbsp; &nbsp;<span class="message-data-name">Doctor (Me)</span> <i class="fa fa-circle me"></i>
+                </div> <div class="message other-message float-right">${el.message}</div></li>`
+                $(".chat-history ul").append(text)
+              } else {
+                text = `<li><div class="message-data"><span class="message-data-name"><i class="fa fa-circle online"></i> Patient ${chatData.patient}</span><span class="message-data-time">${new Date(el.date.seconds * 1000).toLocaleDateString('id-ID', options)}</span> &nbsp; &nbsp;
+                </div> <div class="message my-message">${el.message}</div></li > `
+                $(".chat-history ul").append(text)
+
+              }
+            })
+          } else {
+            console.log("Document has been deleted!");
+          }
+        });
+      }
+      var chat = {
+        messageToSend: '',
+        init: function () {
+          let stateNya = false
+          chatsCollection.orderBy("created", "desc").onSnapshot(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              if (doc.exists) {
+                var chatData = doc.data();
+                let { id, patient, date, status } = {
+                  id: doc.id,
+                  patient: 'Patient ' + chatData.patient,
+                  date: new Date(chatData.created.seconds * 1000).toLocaleDateString('id-ID', options),
+                  status: chatData.status
+                }
+                if (!stateNya) {
+                  $("ul.list").empty()
+                  stateNya = doc.id
+                  showListMessage(doc.id);
+                }
+                var listItem
+                if (id == stateNya) {
+                  listItem = $(`<li class="clearfix" style="display:flex;align-items:center;cursor:pointer; color:#57BAE8" data-id="${id}"><div class="about"> <div class="name">${patient} (${status ? 'Online' : 'Session End'})</div><span>${date}</span></div></li>`)
+                } else {
+                  listItem = $(`<li class="clearfix" style="display:flex;align-items:center;cursor:pointer" data-id="${id}"><div class="about"> <div class="name">${patient} (${status ? 'Online' : 'Session End'})</div><span>${date}</span></div></li>`)
+                }
+                listItem.on("click", function () {
+                  var clickedId = $(this).data("id"); // Retrieve the 'id' value from data attribute
+                  $('li.clearfix').css('color', 'white')
+                  listItem.css('color', '#57BAE8')
+                  showListMessage(clickedId);
+                });
+                $("ul.list").append(listItem)
+              }
+            });
+          });
+        },
+        cacheDOM: function () {
+          this.$chatHistory = $('.chat-history');
+          this.$button = $('button');
+          this.$textarea = $('#message-to-send');
+          this.$chatHistoryList = this.$chatHistory.find('ul');
+        },
+        bindEvents: function () {
+          this.$button.on('click', this.addMessage.bind(this));
+          this.$textarea.on('keyup', this.addMessageEnter.bind(this));
+        },
+        render: function () {
+          this.scrollToBottom();
+          if (this.messageToSend.trim() !== '') {
+            obj.messages.push({
+              from: "doctor",
+              date: new Date(),
+              message: this.messageToSend
+            })
+            specificDocumentRef.update({ ...obj });
+            this.$textarea.val('');
+          }
+        },
+        addMessage: function () {
+          this.messageToSend = this.$textarea.val();
+          console.log(this.messageToSend);
+          this.render();
+        },
+        addMessageEnter: function (event) {
+          if (event.keyCode === 13) {
+            this.addMessage();
+          }
+        },
+        scrollToBottom: function () {
+          this.$chatHistory.scrollTop(this.$chatHistory[0].scrollHeight);
+        },
+        getCurrentTime: function () {
+          return new Date().toLocaleTimeString().
+            replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+        },
+        getRandomItem: function (arr) {
+          return arr[Math.floor(Math.random() * arr.length)];
+        }
+      };
+      chat.init();
+    })();
+  </script>
+
+</html>
